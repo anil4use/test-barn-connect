@@ -1,0 +1,21 @@
+/* src/MyCalendar.css */
+
+.my-calendar {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .fc-header-toolbar {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .fc-daygrid-event {
+    background-color: #ff5722;
+    color: white;
+  }
+  
+  .fc-event {
+    cursor: pointer;
+  }
+  

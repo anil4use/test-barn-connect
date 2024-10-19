@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mulish:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Mulish", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+
+}
+
+
+:root {
+  --main-color: #2b8f65;
+}
+
+.pc1 {
+  color: var(--main-color);
+}
+
+.Bg {
+  background: var(--main-color) !important;
+  background-color: var(--main-color) !important;
+}
+
+.border {
+  border: 1px solid #cccccc;
+}
+
+html {
+  background-color: #fdfffe !important;
+  background: #fdfffe !important;
+  scroll-behavior: smooth !important;
+}
+
+body {
+  max-width: 1600px;
+  margin: auto !important;
+  width: 100%;
+  background-color: #fdfffe !important;
+  background: #fdfffe !important;
+  scroll-behavior: smooth !important;
+
+
+}
+
+
+.round {
+  position: relative;
+}
+
+.round label {
+  background-color: #fff;
+  border: 1px solid #ccc;
+
+  border-radius: 50%;
+  cursor: pointer;
+  height: 28px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 28px;
+
+}
+
+.round label:after {
+  border: 2px solid #fff;
+  border-top: none;
+  border-right: none;
+  content: "";
+  height: 6px;
+  left: 7px;
+  opacity: 0;
+  position: absolute;
+  top: 8px;
+  transform: rotate(-45deg);
+  width: 12px;
+}
+
+.round input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.round input[type="checkbox"]:checked+label {
+  background-color: #66bb6a;
+  border-color: #66bb6a;
+}
+
+.round input[type="checkbox"]:checked+label:after {
+  opacity: 1;
+}
+
+.css-xofpu,
+.css-pa3zzn {
+  background-color: var(--main-color) !important;
+  /* Custom progress bar color */
+}
+
+
+
+
+/* CustomCheckbox.css */
+.custom-checkbox-container {
+  display: inline-block;
+}
+
+.custom-checkbox {
+  position: relative;
+  cursor: pointer;
+}
+
+.custom-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  border-radius: 3px;
+  background-color: white;
+  /* Background color of the checkbox */
+  border: 2.5px solid rgb(0, 0, 0, 0.6);
+  /* Border color */
+}
+
+.custom-checkbox input:checked~.checkmark {
+  border: 2.5px solid #2b8f65;
+}
+
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.custom-checkbox input:checked~.checkmark:after {
+  display: block;
+}
+
+.custom-checkbox .checkmark:after {
+  left: 5px;
+  /* top: 5px; */
+  width: 2px;
+  height: 10px;
+  border: solid rgb(0, 0, 0);
+  border-width: 0 3px 3px 0;
+  transform: rotate(50deg);
+}
+
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
+.mapboxgl-ctrl-attrib{
+  display: none !important;;
+}
+
+/* Optional: Styling for label text */
+.label-text {
+  margin-left: 35px;
+  /* Adjust as needed */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+.react-tel-input .form-control{
+  width: 100% !important;
+  border: 1px solid #79747E !important;
+  height: 2.5rem !important;
+}
+.react-tel-input .flag-dropdown{
+  border: 1px solid #79747E !important;
+
+}

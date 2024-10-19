@@ -1,0 +1,28 @@
+.terms--container {
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  /* border: 2px solid red; */
+  width: 100%;
+  padding-top: 2rem;
+  margin-bottom: 3rem;
+}
+
+.terms--container h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.agreement {
+  margin: 0;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 1200px) {
+  .terms--container {
+    padding: 2rem 2rem;
+  }
+}
