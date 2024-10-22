@@ -9,7 +9,7 @@ class Auth extends HttpClient {
     this._initializeRequestInterceptor();
     this._initializeResponseInterceptor();
   }
-  
+
   _initializeRequestInterceptor = () => {
     this.instance.interceptors.request.use((config) => {
       config.headers["Authorization"] = `Bearer ${getTokenLocal()}`;
@@ -31,18 +31,17 @@ class Auth extends HttpClient {
 
   loginConfig = ApiRoutes.Auth.Login;
   registerConfig = ApiRoutes.Auth.Register;
-  updateUserConfig = ApiRoutes.Auth.updateUser
-  forgetPasswordConfig = ApiRoutes.Auth.forgetPassword
-  setPasswordConfig = ApiRoutes.Auth.setPassword
-  verifyOTPConfig = ApiRoutes.Auth.verifyOTP
-  socialLoginConfig = ApiRoutes.Auth.socialLogin
-  horseProfileConfig = ApiRoutes.Auth.horseProfile
-  updatehorseProfileConfig = ApiRoutes.Auth.updatehorseProfile
-  getUserDetailConfig = ApiRoutes.Auth.getUserDetail
-  verifyEmailConfig = ApiRoutes.Auth.verifyEmail
-  verifyTokenConfig = ApiRoutes.Auth.verifyToken
-  reSendOtpConfig = ApiRoutes.Auth.reSendOtp
-
+  updateUserConfig = ApiRoutes.Auth.updateUser;
+  forgetPasswordConfig = ApiRoutes.Auth.forgetPassword;
+  setPasswordConfig = ApiRoutes.Auth.setPassword;
+  verifyOTPConfig = ApiRoutes.Auth.verifyOTP;
+  socialLoginConfig = ApiRoutes.Auth.socialLogin;
+  horseProfileConfig = ApiRoutes.Auth.horseProfile;
+  updatehorseProfileConfig = ApiRoutes.Auth.updatehorseProfile;
+  getUserDetailConfig = ApiRoutes.Auth.getUserDetail;
+  verifyEmailConfig = ApiRoutes.Auth.verifyEmail;
+  verifyTokenConfig = ApiRoutes.Auth.verifyToken;
+  reSendOtpConfig = ApiRoutes.Auth.reSendOtp;
 
   login = async (reqBody) => {
     return this.instance({
@@ -151,9 +150,6 @@ class Auth extends HttpClient {
       data: reqBody,
     });
   };
-
-
-
 }
 
 export default Auth;

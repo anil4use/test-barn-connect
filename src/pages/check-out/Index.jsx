@@ -50,27 +50,27 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import CheckOutApi from "../../apis/checkout.api";
 import CartApi from "../../apis/cart.api";
-import Select from 'react-select';
-import noCardFound from '../../assets/images/noCardFound.png'
+import Select from "react-select";
+import noCardFound from "../../assets/images/noCardFound.png";
 import HorseApi from "../../apis/horse.api";
 import { useSelector } from "react-redux";
 import CouponApi from "../../apis/Coupon.api";
 
 function Index() {
   const options = [
-    { value: 1, label: '1 day' },
-    { value: 2, label: '2 days' },
-    { value: 3, label: '3 days' },
-    { value: 4, label: '4 days' },
-    { value: 5, label: '5 days' },
-    { value: 6, label: '6 days' },
-    { value: 7, label: '7 days' },
-    { value: 14, label: '2 weeks' },
-    { value: 21, label: '3 weeks' },
-    { value: 28, label: '4 weeks' },
-    { value: 30, label: '1 month' },
-    { value: 60, label: '2 months' },
-    { value: 90, label: '3 months' }
+    { value: 1, label: "1 day" },
+    { value: 2, label: "2 days" },
+    { value: 3, label: "3 days" },
+    { value: 4, label: "4 days" },
+    { value: 5, label: "5 days" },
+    { value: 6, label: "6 days" },
+    { value: 7, label: "7 days" },
+    { value: 14, label: "2 weeks" },
+    { value: 21, label: "3 weeks" },
+    { value: 28, label: "4 weeks" },
+    { value: 30, label: "1 month" },
+    { value: 60, label: "2 months" },
+    { value: 90, label: "3 months" },
   ];
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [orderSummaryLoading, setOrderSummaryLoading] = useState(false);
@@ -84,16 +84,15 @@ function Index() {
   const [showCoupon, setShowCoupon] = useState(false);
   const [orderSummary, setOrderSummary] = useState();
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState("");
   const [selectedDays, setSelectedDays] = useState(options[0]);
-  const [rentId, setRentId] = useState('');
+  const [rentId, setRentId] = useState("");
   const [selectedCouponCode, setSelectedCouponCode] = useState(null);
-  const [barnRentalId, setBarnRentalId] = useState('');
+  const [barnRentalId, setBarnRentalId] = useState("");
   const [check, setCheck] = useState(false);
-  const [serviceRentId, setServiceRentId] = useState('');
+  const [serviceRentId, setServiceRentId] = useState("");
   // const getCartData = useSelector((state) => state.Cart.Cart);
   // console.log(getCartData,'--09-09-0');
-  
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -107,8 +106,7 @@ function Index() {
   const servicePurchaseDay = searchParams.get("servicePurchaseDay");
   const id = searchParams.get("id");
 
-
-  console.log('getCardID',barnId);
+  console.log("getCardID", barnId);
   // setId(searchParams.get('id'))
   const couponApi = new CouponApi();
   const navigate = useNavigate();
@@ -124,6 +122,7 @@ function Index() {
       const couponResponse = await couponApi.getAllCoupon();
       if (couponResponse?.data?.code === 200) {
         let items = couponResponse?.data?.data;
+        console.log("couponResponse successfully");
         setCouponData(items);
       } else {
         toast.error(couponResponse?.data?.message);
@@ -135,12 +134,14 @@ function Index() {
   };
 
   const CouponOptions = couponData
-    .filter(coupon => coupon.isActive)
-    .map(coupon => ({
-      value: coupon.couponCode,
-      label: `${coupon.couponCode} - ${coupon.discount}${coupon.discountType === 'percent' ? '%' : ' $'}`, // Customize label as needed
-      discount: coupon.discount, // Store discount for further use
-      discountType: coupon.discountType, // Store discount type
+    .filter((coupon) => coupon?.isActive)
+    .map((coupon) => ({
+      value: coupon?.couponCode,
+      label: `${coupon?.couponCode} - ${coupon?.discount}${
+        coupon?.discountType === "percent" ? "%" : " $"
+      }`, // Customize label as needed
+      discount: coupon?.discount, // Store discount for further use
+      discountType: coupon?.discountType, // Store discount type
     }));
 
   const handleSelectCouponCode = (selectedOption) => {
@@ -152,9 +153,13 @@ function Index() {
     try {
       const response = await addressApi.getAllAddress();
       if (response?.data?.code === 200) {
+        console.log("all addresses successfully");
+
         setAllAddress(response?.data?.data);
         setSelectedAddressId(response?.data?.data[0]?.addressId);
       } else {
+        console.log("all addresses failed");
+
         toast.error(response?.data?.message);
       }
     } catch (error) {
@@ -168,7 +173,7 @@ function Index() {
     e.preventDefault();
 
     if (selectedCouponCode == null) {
-      return toast.error('please select or enter a coupon')
+      return toast.error("please select or enter a coupon");
     }
     try {
       setCouponLoading(true);
@@ -176,15 +181,15 @@ function Index() {
         couponCode: selectedCouponCode?.value,
       });
       if (Response.data.code === 200) {
-        setShowCoupon(true)
+        setShowCoupon(true);
         toast.success(Response?.data?.message);
-        let coupon = Response?.data?.data?.couponCode
+        let coupon = Response?.data?.data?.couponCode;
         if (rental) {
-          getRentalSummary(coupon)
+          getRentalSummary(coupon);
         } else if (service) {
-          GetServicePurchaseSummary(coupon)
+          GetServicePurchaseSummary(coupon);
         } else if (isBarn) {
-          getBarnSummary(coupon)
+          getBarnSummary(coupon);
         } else {
           getOrderSummary(coupon);
         }
@@ -218,7 +223,7 @@ function Index() {
         serviceRentId,
       });
       if (Response?.data?.code === 200) {
-        navigate('/services')
+        navigate("/services");
       } else {
         toast.error(Response?.data?.message);
       }
@@ -233,7 +238,7 @@ function Index() {
         rentId,
       });
       if (Response?.data?.code === 200) {
-        navigate('/products')
+        navigate("/products");
       } else {
         toast.error(Response?.data?.message);
       }
@@ -241,29 +246,32 @@ function Index() {
       toast.error(error);
     }
   };
- 
+
   const getOrderSummary = async (couponCode) => {
+    if (selectedAddressId !== null || selectedAddressId === undefined || selectedAddressId === '') {
     setCheck(false);
     setOrderSummaryLoading(true);
     try {
-      const getResponse = await checkOutApi.getOrderSummary({ 
+      const getResponse = await checkOutApi.getOrderSummary({
         couponCode,
         addressId: selectedAddressId,
-       });
+      });
 
       if (getResponse?.data?.code === 200) {
+        setOrderSummaryLoading(false);
         setOrderSummary(getResponse?.data?.data);
-        setCheck(getResponse?.data?.data?.items ? false : true)
-      } else {
-        toast.error(getResponse?.data?.message);
+        setCheck(getResponse?.data?.data?.items ? false : true);
+      } else if(error){
+        toast.error('error', error);
+      }else{
+        toast.error('something went wrong');
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('service is not available try after some time');
     } finally {
-      setOrderSummaryLoading(false);
-    }
+    }}
   };
-  
+
   const getRentalSummary = async (couponCode) => {
     setOrderSummaryLoading(true);
     try {
@@ -277,8 +285,8 @@ function Index() {
 
       if (rentalOrderSummaryResponse?.data?.code === 200) {
         setOrderSummary(rentalOrderSummaryResponse?.data?.data);
-        setCheck(rentalOrderSummaryResponse?.data?.data?.items ? false : true)
-        setRentId(rentalOrderSummaryResponse?.data?.data?.rentId)
+        setCheck(rentalOrderSummaryResponse?.data?.data?.items ? false : true);
+        setRentId(rentalOrderSummaryResponse?.data?.data?.rentId);
       } else {
         // toast.error(rentalOrderSummaryResponse.data.message);
       }
@@ -300,12 +308,11 @@ function Index() {
         servicePurchaseDay,
         couponCode,
         addressId: selectedAddressId,
-
       });
       if (ServicePurchaseResponse?.data?.code === 200) {
         setOrderSummary(ServicePurchaseResponse?.data?.data);
-        setCheck(ServicePurchaseResponse?.data?.data?.items ? false : true)
-        setServiceRentId(ServicePurchaseResponse?.data?.data?.serviceRentId)
+        setCheck(ServicePurchaseResponse?.data?.data?.items ? false : true);
+        setServiceRentId(ServicePurchaseResponse?.data?.data?.serviceRentId);
       } else {
         toast.error(ServicePurchaseResponse?.data?.message);
       }
@@ -323,17 +330,17 @@ function Index() {
     try {
       const PaymentResponse = await checkOutApi.createOrder({
         addressId: selectedAddressId,
-        couponCode: selectedCouponCode?.value
+        couponCode: selectedCouponCode?.value,
       });
       if (PaymentResponse.data.code === 200) {
         // toast.success(PaymentResponse.data.message);
         window.open(PaymentResponse?.data?.data?.data?.url);
-        console.log(PaymentResponse?.data?.data?.data?.url,'createOrder');
+        console.log(PaymentResponse?.data?.data?.data?.url, "createOrder");
 
         // resetCartHandler();
-        navigate('/order-history');
+        navigate("/order-history");
       } else {
-        toast.error(PaymentResponse.data.message);
+        toast.error(PaymentResponse?.data?.message);
       }
     } catch (error) {
       toast.error(error);
@@ -366,18 +373,18 @@ function Index() {
       });
       if (PaymentResponse.data.code === 200) {
         // toast.success(PaymentResponse.data.message);
-        console.log(PaymentResponse?.data?.data?.data?.url,'rentalProduct');
+        console.log(PaymentResponse?.data?.data?.data?.url, "rentalProduct");
         window.open(PaymentResponse?.data?.data?.data?.url);
-        
+
         resetRentalProductSummary();
       } else {
         toast.error(PaymentResponse?.data?.message);
       }
     } catch (error) {
       // toast.error(error);
-      console.log('test error: ' + error);
-      
-      toast.error('error');
+      console.log("test error: " + error);
+
+      toast.error("error");
     } finally {
       setPaymentLoading(false);
     }
@@ -393,13 +400,13 @@ function Index() {
         serviceId,
         servicePurchaseDay,
         couponCode: selectedCouponCode?.value,
-        serviceRentId
+        serviceRentId,
       });
       if (PaymentResponse?.data?.code === 200) {
         // toast.success(PaymentResponse.data.message);
         // resetCartHandler();
         window.open(PaymentResponse?.data?.data?.data?.url);
-        console.log(PaymentResponse?.data?.data?.data?.url,'servicePurchase');
+        console.log(PaymentResponse?.data?.data?.data?.url, "servicePurchase");
         // resetServicesSummary()
       } else {
         toast.error(PaymentResponse?.data?.message);
@@ -424,13 +431,13 @@ function Index() {
         userId: userData?.userId,
         horseId: selectedHorses,
         numberOfHorses: selectedHorses?.length,
-        barnRentalId: barnRentalId
+        barnRentalId: barnRentalId,
       });
       if (PaymentResponse?.data?.code === 200) {
         // toast.success(PaymentResponse.data.message);
-        console.log(PaymentResponse?.data?.data?.data?.url,'barnPayment');
+        console.log(PaymentResponse?.data?.data?.data?.url, "barnPayment");
         window.open(PaymentResponse?.data?.data?.data?.url);
-        navigate('/barns')
+        navigate("/barns");
       } else {
         toast.error(PaymentResponse?.data?.message);
       }
@@ -445,12 +452,14 @@ function Index() {
     try {
       const Response = await horseApi.getAllHorseOfUser();
       if (Response?.data?.code === 200) {
-        if (Response?.data?.data?.length <= 0) {
-          navigate('/horse/register')
-        }
-        setHorse(Response?.data?.data[0])
-        setSelectedHorses([Response?.data?.data?.[0]?.horseId])
+        console.log("Horse successfully");
 
+        if (Response?.data?.data?.length <= 0) {
+          console.log("Horse successfully if");
+          navigate("/horse/register");
+        }
+        setHorse(Response?.data?.data[0]);
+        setSelectedHorses([Response?.data?.data?.[0]?.horseId]);
       } else {
         toast.error(Response?.data?.message);
       }
@@ -470,14 +479,13 @@ function Index() {
         couponCode,
         days: selectedDays?.value,
         addressId: selectedAddressId,
-        horseId: selectedHorses
-
+        horseId: selectedHorses,
       });
       if (barnResponse?.data?.code === 200) {
         setOrderSummary(barnResponse?.data?.data);
-        setCheck(barnResponse?.data?.data?.items ? false : true)
-        setBarnRentalId(barnResponse?.data?.data?.rentId)
-        setServiceRentId(barnResponse?.data?.data?.serviceRentId)
+        setCheck(barnResponse?.data?.data?.items ? false : true);
+        setBarnRentalId(barnResponse?.data?.data?.rentId);
+        setServiceRentId(barnResponse?.data?.data?.serviceRentId);
       } else {
         // toast.error(barnResponse.data.message);
       }
@@ -490,24 +498,25 @@ function Index() {
 
   useEffect(() => {
     if (isBarn) {
-      getAllHorses()
+      getAllHorses();
     } else {
       getAllAddress();
     }
     // getAllCoupon();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (rental) {
-      getRentalSummary()
+      getRentalSummary();
     } else if (service) {
-      GetServicePurchaseSummary()
+      GetServicePurchaseSummary();
     } else if (isBarn) {
-      getBarnSummary()
+      getBarnSummary();
     } else {
       getOrderSummary();
     }
-  }, [selectedAddressId, selectedDays, selectedHorses]); ``
+  }, [selectedAddressId, selectedDays, selectedHorses]);
+  ``;
   const handleRadioChange = (event) => {
     setSelectedAddressId(event);
   };
@@ -518,15 +527,12 @@ function Index() {
     const isSelected = selectedHorses.includes(horseId);
 
     if (isSelected) {
-      const filteredHorses = selectedHorses.filter(id => id != horseId);
+      const filteredHorses = selectedHorses.filter((id) => id != horseId);
       setSelectedHorses(filteredHorses);
     } else {
-
       setSelectedHorses([...selectedHorses, horseId]);
-
     }
-  }
-
+  };
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
@@ -537,12 +543,12 @@ function Index() {
   };
   useEffect(() => {
     const now = new Date();
-    const formattedDate = now.toISOString().split('T')[0]; // Format the date as YYYY-MM-DD
+    const formattedDate = now.toISOString().split("T")[0]; // Format the date as YYYY-MM-DD
     setSelectedDate(formattedDate);
   }, []);
 
   return (
-    <Box minH={'90vh'}>
+    <Box minH={"90vh"}>
       {!check ? (
         <Box pos={"relative"}>
           <ProductBanner
@@ -578,27 +584,29 @@ function Index() {
                 h={"fit-content"}
                 // border={'1px solid #cccccc'}
                 rounded={"8px"}
-              // boxShadow={'md'}
+                // boxShadow={'md'}
               >
-                <Box
-                  display={isBarn ? "none" : "block"}>
+                <Box display={isBarn ? "none" : "block"}>
                   <Box
                     fontWeight={"700"}
                     // onClick={() => navigate(`/manage-address?checkOut=${true}?&rental=${rental}&quantity=${quantity}&productId=${productId}`)}
                     onClick={() => {
                       if (rental) {
-                        navigate(`/manage-address?checkOut=${true}?&rental=${rental}&quantity=${quantity}&productId=${productId}`);
+                        navigate(
+                          `/manage-address?checkOut=${true}?&rental=${rental}&quantity=${quantity}&productId=${productId}`
+                        );
                       } else if (service) {
-                        navigate(`/manage-address?checkOut=${true}?&service=${service}&servicePurchaseDay=${servicePurchaseDay}&serviceId=${serviceId}`);
+                        navigate(
+                          `/manage-address?checkOut=${true}?&service=${service}&servicePurchaseDay=${servicePurchaseDay}&serviceId=${serviceId}`
+                        );
                       } else {
                         navigate(`/manage-address?checkOut=${true}`);
-
                       }
                     }}
                     textColor={"#2b8f65"}
-                    cursor={'pointer'}
+                    cursor={"pointer"}
                   >
-                    +  Add New Address
+                    + Add New Address
                   </Box>
                 </Box>
                 {loadingAddress || horseLoading ? (
@@ -620,9 +628,9 @@ function Index() {
                     </Box>
                   </>
                 ) : (
-                  <Box >
-                    {
-                      allAddress?.length > 0 ? (<Box
+                  <Box>
+                    {allAddress?.length > 0 ? (
+                      <Box
                         boxShadow={"md"}
                         p={1}
                         rounded={"md"}
@@ -630,19 +638,18 @@ function Index() {
                         display={isBarn ? "none" : "flex"}
                         flexDirection={"column"}
 
-                      // gap={3}
+                        // gap={3}
                       >
                         {allAddress?.map((item, index) => {
                           return (
-                            <Box
-                              key={index}
-                              p={2}
-                              w={"100%"}
-                            >
-                              <HStack w={"100%"} justifyContent={"space-between"}>
+                            <Box key={index} p={2} w={"100%"}>
+                              <HStack
+                                w={"100%"}
+                                justifyContent={"space-between"}
+                              >
                                 <Box>
                                   <Text fontSize={"16px"} fontWeight={"bold"}>
-                                    {item.firstName} {item.lastName}
+                                    {item?.firstName} {item?.lastName}
                                   </Text>
                                   <Text
                                     fontSize={"14px"}
@@ -650,8 +657,8 @@ function Index() {
                                     textColor={"#222222"}
                                     fontFamily={"Sofia Sans"}
                                   >
-                                    {item.street},{item.city},{item.state},
-                                    {item.zipCode}
+                                    {item?.street},{item?.city},{item?.state},
+                                    {item?.zipCode}
                                   </Text>
                                   <HStack>
                                     <RadioGroup
@@ -662,7 +669,7 @@ function Index() {
                                         size="md"
                                         colorScheme="green"
                                         value={item.addressId}
-                                      // isChecked={selectedAddressId === item.addressId}
+                                        // isChecked={selectedAddressId === item.addressId}
                                       >
                                         Use as the shipping address
                                       </Radio>
@@ -673,12 +680,23 @@ function Index() {
                                   <Button
                                     onClick={() => {
                                       if (rental) {
-                                        navigate(`/manage-address?id=${item.addressId}&checkOut=${true}?&rental=${rental}&quantity=${quantity}&productId=${productId}`);
+                                        navigate(
+                                          `/manage-address?id=${
+                                            item.addressId
+                                          }&checkOut=${true}?&rental=${rental}&quantity=${quantity}&productId=${productId}`
+                                        );
                                       } else if (service) {
-                                        navigate(`/manage-address?id=${item.addressId}&checkOut=${true}?&service=${service}&servicePurchaseDay=${servicePurchaseDay}&serviceId=${serviceId}`);
+                                        navigate(
+                                          `/manage-address?id=${
+                                            item.addressId
+                                          }&checkOut=${true}?&service=${service}&servicePurchaseDay=${servicePurchaseDay}&serviceId=${serviceId}`
+                                        );
                                       } else {
-                                        navigate(`/manage-address?id=${item.addressId}&checkOut=${true}`);
-
+                                        navigate(
+                                          `/manage-address?id=${
+                                            item.addressId
+                                          }&checkOut=${true}`
+                                        );
                                       }
                                     }}
                                     colorScheme="teal"
@@ -702,19 +720,30 @@ function Index() {
                             </Box>
                           );
                         })}
-                      </Box>) : (
-                        <Box display={isBarn ? "none" : "flex"}>No Address found</Box>
-                      )
-                    }
+                      </Box>
+                    ) : (
+                      <Box display={isBarn ? "none" : "flex"}>
+                        No Address found
+                      </Box>
+                    )}
 
-                    {
-                      !isBarn ? null : <Box mt={2}
+                    {!isBarn ? null : (
+                      <Box
+                        mt={2}
                         textColor={"#2b8f65"}
-                        fontWeight={'600'}
-                        onClick={() => navigate(`/horse/register?isBarn=${true}&id=${barnId}`)}
-                        fontSize={'18px'} mb={2}
-                        cursor={'pointer'}>+ Add horse</Box>
-                    }
+                        fontWeight={"600"}
+                        onClick={() =>
+                          navigate(
+                            `/horse/register?isBarn=${true}&id=${barnId}`
+                          )
+                        }
+                        fontSize={"18px"}
+                        mb={2}
+                        cursor={"pointer"}
+                      >
+                        + Add horse
+                      </Box>
+                    )}
                     <Box
                       p={"4"}
                       boxShadow={"md"}
@@ -724,75 +753,94 @@ function Index() {
                       flexDirection={"column"}
                       gap={3}
                     >
-                      {horse && horse?.map((item, index) => {
-                        return (
-                          <Box key={index} p={2} w={"100%"}>
-                            <HStack w={"100%"} justifyContent={"space-between"}>
-                              <Box>
-                                <HStack>
-                                  <Text fontSize={"16px"} fontWeight={"normal"}>
-                                    <b>Horse Name</b> : {item.horseName},
-                                  </Text>
-                                  <Text fontSize={"16px"} fontWeight={"normal"}>
-                                    <b>Breed Name</b> : {item.horseBreed},
-                                  </Text>
-                                  <Text fontSize={"16px"} fontWeight={"normal"}>
-                                    <b>Horse Age</b> : {item.horseAge}
-                                  </Text>
-                                </HStack>
+                      {horse &&
+                        horse?.map((item, index) => {
+                          return (
+                            <Box key={index} p={2} w={"100%"}>
+                              <HStack
+                                w={"100%"}
+                                justifyContent={"space-between"}
+                              >
+                                <Box>
+                                  <HStack>
+                                    <Text
+                                      fontSize={"16px"}
+                                      fontWeight={"normal"}
+                                    >
+                                      <b>Horse Name</b> : {item?.horseName},
+                                    </Text>
+                                    <Text
+                                      fontSize={"16px"}
+                                      fontWeight={"normal"}
+                                    >
+                                      <b>Breed Name</b> : {item?.horseBreed},
+                                    </Text>
+                                    <Text
+                                      fontSize={"16px"}
+                                      fontWeight={"normal"}
+                                    >
+                                      <b>Horse Age</b> : {item?.horseAge}
+                                    </Text>
+                                  </HStack>
 
-                                <HStack>
-                                  <Checkbox
-                                    size="md"
-                                    colorScheme="green"
-                                    value={item?.horseId}
-                                    defaultChecked={selectedHorses.includes(item?.horseId)}
-                                    onChange={handleHorseChange}
-                                  >
-                                    Associate this Horse with Barn
-                                  </Checkbox>
-                                </HStack>
-                              </Box>
-                            </HStack>
-                          </Box>
-                        );
-                      })}
+                                  <HStack>
+                                    <Checkbox
+                                      size="md"
+                                      colorScheme="green"
+                                      value={item?.horseId}
+                                      defaultChecked={selectedHorses.includes(
+                                        item?.horseId
+                                      )}
+                                      onChange={handleHorseChange}
+                                    >
+                                      Associate this Horse with Barn
+                                    </Checkbox>
+                                  </HStack>
+                                </Box>
+                              </HStack>
+                            </Box>
+                          );
+                        })}
                     </Box>
                   </Box>
-
                 )}
-                {
-                  rental || isBarn ? (
-                    <HStack p={4} boxShadow={'md'} rounded={'md'} border={'1px solid #cccccc'} flexDirection={'row'} gap={3}>
-                      <FormControl>
-                        <FormLabel>Select Date</FormLabel>
-                        <Input
-                          border="1px solid #79747E"
-                          focusBorderColor="none"
-                          bg="white"
-                          value={selectedDate}
-
-                          onChange={handleDateChange}
-                          color="black"
-                          outline="none"
-                          placeholder='Select Date'
-                          size='md'
-                          type='date'
-                        />
-                        <FormErrorMessage>{''}</FormErrorMessage>
-                      </FormControl>
-                      <FormControl>
-                        <FormLabel>Duration</FormLabel>
-                        <Select
-                          value={selectedDays}
-                          onChange={handleSelectChange}
-                          options={options}
-                          placeholder='Select duration'
-                        />
-                        <FormErrorMessage>{''}</FormErrorMessage>
-                      </FormControl>
-                    </HStack>)
-                    : null}
+                {rental || isBarn ? (
+                  <HStack
+                    p={4}
+                    boxShadow={"md"}
+                    rounded={"md"}
+                    border={"1px solid #cccccc"}
+                    flexDirection={"row"}
+                    gap={3}
+                  >
+                    <FormControl>
+                      <FormLabel>Select Date</FormLabel>
+                      <Input
+                        border="1px solid #79747E"
+                        focusBorderColor="none"
+                        bg="white"
+                        value={selectedDate}
+                        onChange={handleDateChange}
+                        color="black"
+                        outline="none"
+                        placeholder="Select Date"
+                        size="md"
+                        type="date"
+                      />
+                      <FormErrorMessage>{""}</FormErrorMessage>
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Duration</FormLabel>
+                      <Select
+                        value={selectedDays}
+                        onChange={handleSelectChange}
+                        options={options}
+                        placeholder="Select duration"
+                      />
+                      <FormErrorMessage>{""}</FormErrorMessage>
+                    </FormControl>
+                  </HStack>
+                ) : null}
               </Flex>
 
               <Flex
@@ -828,7 +876,7 @@ function Index() {
                         value={selectedCouponCode}
                         onChange={handleSelectCouponCode}
                         options={CouponOptions}
-                        placeholder='Enter or Select Code'
+                        placeholder="Enter or Select Code"
                       />
                       <InputRightElement w={32}>
                         <Button
@@ -838,15 +886,19 @@ function Index() {
                           colorScheme="#E537"
                           bg={"#2b8f65"}
                           isLoading={couponLoading}
+                          isDisabled
                         >
                           Apply
                         </Button>
                       </InputRightElement>
                     </InputGroup>
                     {showCoupon && (
-                      <div style={{ marginTop: '10px', color: 'green' }}>
+                      <div style={{ marginTop: "10px", color: "green" }}>
                         You saved {selectedCouponCode.discount}
-                        {selectedCouponCode.discountType === 'percent' ? '%' : ' $'}!
+                        {selectedCouponCode.discountType === "percent"
+                          ? "%"
+                          : " $"}
+                        !
                       </div>
                     )}
                   </FormControl>
@@ -877,32 +929,34 @@ function Index() {
                     fontWeight={"600"}
                     textColor={"#575757"}
                   >
-                    <Text>{!service ? "Items" : "Days"} ({orderSummary?.items})</Text>
+                    <Text>
+                      {!service ? "Items" : "Days"} ({orderSummary?.items})
+                    </Text>
                     {orderSummaryLoading ? (
                       <LoadingText />
-                    ) : (<>
-                      <Text>$ {orderSummary?.totalPrice}</Text>
-                    </>
+                    ) : (
+                      <>
+                        <Text>$ {orderSummary?.totalPrice}</Text>
+                      </>
                     )}
                   </HStack>
-                  {
-                    orderSummary?.couponDiscount ? (
-                      <HStack
-                        justifyContent={"space-between"}
-                        fontSize={"16px"}
-                        fontWeight={"600"}
-                        textColor={"#575757"}
-                      >
-                        <Text>Coupon Discount</Text>
-                        {orderSummaryLoading ? (
-                          <LoadingText />
-                        ) : (<>
+                  {orderSummary?.couponDiscount ? (
+                    <HStack
+                      justifyContent={"space-between"}
+                      fontSize={"16px"}
+                      fontWeight={"600"}
+                      textColor={"#575757"}
+                    >
+                      <Text>Coupon Discount</Text>
+                      {orderSummaryLoading ? (
+                        <LoadingText />
+                      ) : (
+                        <>
                           <Text>$ {orderSummary?.couponDiscount}</Text>
                         </>
-                        )}
-                      </HStack>
-                    ) : null
-                  }
+                      )}
+                    </HStack>
+                  ) : null}
 
                   <HStack
                     justifyContent={"space-between"}
@@ -918,7 +972,7 @@ function Index() {
                       <Text> $ {orderSummary?.shipping}</Text>
                     )}
                   </HStack>
-                  <Flex flexDir={'column'} justify={'space-between'} h={'90%'}>
+                  <Flex flexDir={"column"} justify={"space-between"} h={"90%"}>
                     <Box>
                       {/* <HStack
                         justifyContent={"space-between"}
@@ -950,7 +1004,7 @@ function Index() {
                           <Text> $ {orderSummary?.taxCollected}</Text>
                         )}
                       </HStack> */}
-                      <Divider zIndex={'0'} border={"1px solid #cccccc"} />
+                      <Divider zIndex={"0"} border={"1px solid #cccccc"} />
                     </Box>
                     <HStack
                       mt={4}
@@ -986,8 +1040,8 @@ function Index() {
                     fontWeight={"600"}
                     textColor={"#575757"}
                   >
-                    By placing your order, you agree to our company Privacy policy
-                    and Conditions of use.
+                    By placing your order, you agree to our company Privacy
+                    policy and Conditions of use.
                   </Text>
 
                   <Button
@@ -995,13 +1049,12 @@ function Index() {
                     isLoading={paymentLoading}
                     onClick={() => {
                       if (rental) {
-                        RentalPaymentHandler()
+                        RentalPaymentHandler();
                       } else if (service) {
-                        ServicePaymentHandler()
+                        ServicePaymentHandler();
                       } else if (isBarn) {
-                        BarnPaymentHandler()
-                      }
-                      else {
+                        BarnPaymentHandler();
+                      } else {
                         PaymentHandler();
                       }
                     }}
@@ -1022,21 +1075,35 @@ function Index() {
             </HStack>
           </Box>
         </Box>
-      )
-        :
-        <Box justifyContent={'center'} alignItems={'center'} w={'100%'} display={'flex'} flexDir={'column'} p={4}>
-          <Image w={{ base: "60%", md: "20%" }} m={'auto'} src={noCardFound} alt='no data found' />
+      ) : (
+        <Box
+          justifyContent={"center"}
+          alignItems={"center"}
+          w={"100%"}
+          display={"flex"}
+          flexDir={"column"}
+          p={4}
+        >
+          <Image
+            w={{ base: "60%", md: "20%" }}
+            m={"auto"}
+            src={noCardFound}
+            alt="no data found"
+          />
           <Button
-            mt={'10'}
+            mt={"10"}
             w={{ md: "20%", base: "50%" }}
-            onClick={() => { navigate('/products') }}
-            borderRadius={'none'}
-            colorScheme='#E537'
-            bg={'#2b8f65'}>
+            onClick={() => {
+              navigate("/products");
+            }}
+            borderRadius={"none"}
+            colorScheme="#E537"
+            bg={"#2b8f65"}
+          >
             Continue Shopping
           </Button>
         </Box>
-      }
+      )}
     </Box>
   );
 }
@@ -1062,14 +1129,14 @@ const DeleteAddressComponent = ({ item, getAllAddress }) => {
   const deleteAddressHandler = async (addressId) => {
     setLoadingDelete(true);
     try {
-      const responce = await addressApi.deleteAddress({
+      const Response = await addressApi.deleteAddress({
         addressId,
       });
-      if (responce.data.code === 200) {
-        toast.success(responce.data.message);
+      if (Response?.data?.code === 200) {
+        toast.success(Response?.data?.message);
         getAllAddress();
       } else {
-        toast.error(responce.data.message);
+        toast.error(Response?.data?.message);
       }
     } catch (error) {
       toast.error(error);

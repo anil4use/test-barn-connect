@@ -16,7 +16,7 @@ import {
 
 const ShippingPolicy = () => {
   return (
-    <Box p={{base:"2",md:"8"}}>
+    <Box p={{base:"2",md:"8"}} className='terms--container' >
       <Container maxW="container.xl">
         <Heading as="h1" fontSize="2xl" mb={4}>
           Barn Connect’ Shipping Policy

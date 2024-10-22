@@ -100,7 +100,7 @@ function Index() {
                                     value={name}
                                     onChange={handleChange}
                                     w={'100%'}
-                                    maxLength={'50'}
+                                    maxLength={'90'}
                                     color={'black'}
                                     placeholder='Enter your name'
                                     focusBorderColor='none'
@@ -117,6 +117,8 @@ function Index() {
                                     onChange={handleChange}
                                     w={'100%'}
                                     type='tel'
+                                    
+                                    maxLength={10}
                                     color={'black'}
                                     placeholder='Enter your phone number'
                                     focusBorderColor='none'
@@ -137,6 +139,7 @@ function Index() {
                                 placeholder='Enter your email'
                                 focusBorderColor='none'
                                 bg={'white'}
+                                maxLength="250"
                                 outline={'none'}
                             />
                             <Text color="red.500">{errors.email}</Text>
@@ -152,6 +155,8 @@ function Index() {
                                 placeholder='Enter your query'
                                 focusBorderColor='none'
                                 bg={'white'}
+                                maxLength="400"
+
                                 outline={'none'}
                             />
                             <Text color="red.500">{errors.query}</Text>

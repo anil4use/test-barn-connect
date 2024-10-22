@@ -33,27 +33,30 @@ import PhoneInput from "@quantfive/react-phone-input-2";
 import { getUserLocal } from "../../utils/localStorage.util";
 
 function Index() {
-  
   const dispatch = useDispatch();
   const otherApi = new OtherApi();
   const barnApi = new BarnApi();
   const data = useSelector((state) => state.user.v_user_info);
-  const userData = getUserLocal()
-  console.log(data,'userData',userData);
-  
+  const userData = getUserLocal();
+  console.log(data, "userData", userData);
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [selectedState, setSelectedState] = useState({
-    stateName: '',
-    stateOrProvinceCode: ''
+    stateName: "",
+    stateOrProvinceCode: "",
   });
   const [type, setType] = useState("");
   const [typeError, setTypeError] = useState("");
 
-  const [fullName, setFullName] = useState(userData?.firstName + " " +userData?.lastName );
+  const [fullName, setFullName] = useState(
+    userData?.firstName + " " + userData?.lastName
+  );
   const [fullNameError, setFullNameError] = useState("");
 
-  const [phoneNumber, setPhoneNumber] = useState((userData?.contact?.toString()) || "");
+  const [phoneNumber, setPhoneNumber] = useState(
+    userData?.contact?.toString() || ""
+  );
   const [phoneNumberError, setPhoneNumberError] = useState("");
 
   const [email, setEmail] = useState(userData?.email || "");
@@ -184,10 +187,8 @@ function Index() {
     } else {
       setPhoneNumberError("");
     }
-   
-
   };
-  console.log(state,stateOrProvinceCode,'8767465454546877654765r7');
+  console.log(state, stateOrProvinceCode, "8767465454546877654765r7");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -218,8 +219,8 @@ function Index() {
           type,
           state,
           city,
-          zipCode:(+ pinCode ),
-          state:selectedState.stateName,
+          zipCode: +pinCode,
+          state: selectedState.stateName,
           stateOrProvinceCode: selectedState.stateOrProvinceCode,
           // termCondition: true,
           businessName,
@@ -241,8 +242,6 @@ function Index() {
       }
     }
   };
-
-
 
   const getAllBarns = async () => {
     setLoading(true);
@@ -503,33 +502,33 @@ function Index() {
                   color="black"
                   outline="none"
                 /> */}
-              <Select
-  name="state"
-  value={selectedState.stateName} // Use the stateName for value
-  onChange={(e) => {
-    const selectedOption = statesData.find(
-      (state) => state.name === e.target.value
-    );
-    setSelectedState({
-      stateName: selectedOption.name,
-      stateOrProvinceCode: selectedOption.abbreviation
-    });
-  }}
-  w="100%"
-  color="black"
-  placeholder="Select a state"
-  bg="white"
-  focusBorderColor="none"
-  _focus={{ boxShadow: 'none' }}
-  maxHeight="600px"
-  overflowY="auto"
->
-  {statesData.map((state) => (
-    <option key={state.abbreviation} value={state.name}>
-      {state.name}
-    </option>
-  ))}
-</Select>
+                <Select
+                  name="state"
+                  value={selectedState.stateName} // Use the stateName for value
+                  onChange={(e) => {
+                    const selectedOption = statesData.find(
+                      (state) => state.name === e.target.value
+                    );
+                    setSelectedState({
+                      stateName: selectedOption.name,
+                      stateOrProvinceCode: selectedOption.abbreviation,
+                    });
+                  }}
+                  w="100%"
+                  color="black"
+                  placeholder="Select a state"
+                  bg="white"
+                  focusBorderColor="none"
+                  _focus={{ boxShadow: "none" }}
+                  maxHeight="600px"
+                  overflowY="auto"
+                >
+                  {statesData.map((state) => (
+                    <option key={state.abbreviation} value={state.name}>
+                      {state.name}
+                    </option>
+                  ))}
+                </Select>
 
                 <Text pos={"absolute"} fontSize="sm" color="red.500">
                   {stateError}

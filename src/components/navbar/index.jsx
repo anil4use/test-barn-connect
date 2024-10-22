@@ -500,7 +500,7 @@ const Profile = ({ onClose,onOpen }) => {
                   );
                 })}
 
-              {userData?.isVerify ? (
+              {userData?.isAdmin ? (
                 <>
                   <Divider bg={"rgba(151, 214, 188, 1)"} />
                   <HStack h={10} cursor={"pointer"}>

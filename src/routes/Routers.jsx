@@ -32,7 +32,6 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import VerifyCode from "../pages/auth/VerifyCode";
 import SetNewPassword from "../pages/auth/SetNewPassword";
 import ForgotOtpVerify from "../pages/auth/ForgotOtpVerify";
-
 import PageNotFound from "../components/shared/404/Index";
 import PrivacyPolicy from "../pages/policies/PrivacyPolicy";
 import ShippingPolicy from "../pages/policies/ShippingPolicy";
@@ -43,14 +42,13 @@ import Cancellation from "../pages/policies/Cancellation";
 import BecomeMember from "../pages/become-member/Index";
 import Barn from "../pages/barn/Index";
 import BarnDetails from "../pages/barn-details/Index";
-import HorseManage from '../pages/horse-manages/index';
-import HorseListing from '../pages/horse-manages/listing';
-import HorseDetails from '../pages/horse-details/Index';
-import SuccessPage from '../pages/paymentPage/success/index'
-import FailedPage from '../pages/paymentPage/faild/index'
+import HorseManage from "../pages/horse-manages/index";
+import HorseListing from "../pages/horse-manages/listing";
+import HorseDetails from "../pages/horse-details/Index";
+import SuccessPage from "../pages/paymentPage/success/index";
+import FailedPage from "../pages/paymentPage/faild/index";
 
 const Routers = () => {
-
   return (
     <React.Suspense>
       <Navbar />
@@ -65,7 +63,7 @@ const Routers = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        
+
         <Route path="/verify-code" element={<VerifyCode />} />
         <Route path="/setnew-password" element={<SetNewPassword />} />
         <Route path="/Enter-Otp" element={<ForgotOtpVerify />} />
@@ -170,9 +168,7 @@ const Routers = () => {
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/barns" element={<Barn />} />
 
-        <Route path="/barn/:id" element={
-          <BarnDetails />
-          } />
+        <Route path="/barn/:id" element={<BarnDetails />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/shipping-policy" element={<ShippingPolicy />} />
         <Route path="/terms-and-conditions" element={<TermAndCondition />} />

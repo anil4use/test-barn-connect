@@ -15,6 +15,8 @@ import {
   VStack,
   Select,
   Spinner,
+  List,
+  ListItem,
 } from "@chakra-ui/react";
 import { ProfileSideBarComponent } from "../../components/profileSideBarComponent/Index";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,12 +34,15 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { manageAddress } from "../../redux/redux-slice/others.slice";
+import ExcelData from "../../assets/excel/UsCities.json";
 
 function Index() {
   const [loading, setLoading] = useState(false);
   const [addressLoading, setAddressLoading] = useState(false);
   const [addressActive, setAddressActive] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState();
+  const [selectedZip, setSelectedZip] = useState('');
+
   const dispatch = useDispatch();
   const data = useSelector((state) => state.other.ManageAddress);
   const location = useLocation();
@@ -62,44 +67,36 @@ function Index() {
     city: "",
     state: "",
     zipCode: "",
-    country: "",
+    country: "USA",
     stateOrProvinceCode: "",
   };
-  
+
+  const [selectedState, setSelectedState] = useState("");
+  const [cityInput, setCityInput] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
+const [stateOrProvinceCode, setStateOrProvinceCode] = useState("");
+  console.log(stateOrProvinceCode,'stateOrProvinceCode',selectedCity, "selectedCity", selectedZip, "selectedZip", selectedState, "selectedState" );
+  
 
-  const CartData = useSelector((state) => state.cart.Cart);
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormData({
-  //     ...formData,
-  //     [name]: value,
-  //   });
-  //     console.log(formData, "formData");
-  //   validateInput(name, value);
-  // };
-
- 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "state") {
-      const selectedState = statesData.find(state => state.name === value);
-      if (selectedState) {
-        setFormData(prevData => ({
-          ...prevData,
-          state: selectedState.name, 
-          stateOrProvinceCode: selectedState.abbreviation
-        }));
-      }
-    } else {
-      setFormData(prevData => ({
+    // if (name === "state") {
+    //   const selectedState = statesData.find((state) => state.name === value);
+    //   if (selectedState) {
+    //     setFormData((prevData) => ({
+    //       ...prevData,
+    //       state: selectedState?.name,
+    //       stateOrProvinceCode: selectedState?.abbreviation,
+    //     }));
+    //   }
+    // } else {
+      setFormData((prevData) => ({
         ...prevData,
-        [name]: value
+        [name]: value,
       }));
-    }
+    // }
     console.log(formData, "formData");
   };
 
@@ -134,13 +131,40 @@ function Index() {
       [name]: error,
     });
   };
-  const SubmitHandler = async (e) => {
-    console.log("click");
-    e.preventDefault();
+  const SubmitHandler = async (e) => {e.preventDefault();
+
+  // const formPayload = new FormData();
+  // Append old form data
+  // formPayload.append("firstName", formData.firstName);
+  // formPayload.append("lastName", formData.lastName);
+  // formPayload.append("email", formData.email);
+  // formPayload.append("street", formData.street);
+  // formPayload.append("contact", formData.contact);
+  // formPayload.append("stateOrProvinceCode", stateOrProvinceCode);
+  // // Append new selected values
+  // formPayload.append("zipCode", selectedZip);
+  // formPayload.append("state", selectedState);
+  // formPayload.append("country", 'USA');
+  var formPayload = {
+    'firstName': formData.firstName,
+    'lastName': formData.lastName,
+    'email': formData.email,
+    'street': formData.street,
+    'contact': Number(formData.contact),
+    'stateOrProvinceCode': stateOrProvinceCode,
+    'zipCode': Number(selectedZip),
+    'state': selectedState,
+    'country': 'USA',
+    'city': selectedCity,
+  };
+
+    if(stateOrProvinceCode === ""){
+      toast.error('Please select a state/province');
+      return;
+    }
     try {
       setLoading(true);
-      console.log("click");
-      const response = await addressApi.addAddress(formData);
+      const response = await addressApi.addAddress(formPayload);
       if (response.data.code === 200) {
         toast.success(response.data.message);
         setLoading(false);
@@ -154,7 +178,6 @@ function Index() {
     } catch (error) {
       toast.error(error);
       setLoading(false);
-      console.log("click");
     }
   };
   const UpdateHandler = async (e) => {
@@ -162,13 +185,13 @@ function Index() {
     try {
       setLoading(true);
       const response = await addressApi.updateAddress({
-        city: formData.city,
+        city: selectedCity,
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        zipCode: formData.zipCode,
-        country: formData.country,
-        state: formData.state,
+        zipCode: selectedZip,
+        country: 'USA',
+        state: selectedState,
         street: formData.street,
         contact: formData.contact,
         addressId: id,
@@ -230,11 +253,16 @@ function Index() {
           lastName: e.lastName,
           email: e.email,
           zipCode: e.zipCode,
-          country: e.country,
+          country: "USA",
           state: e.state,
           street: e.street,
           contact: e.contact,
+          stateOrProvinceCode: e.stateOrProvinceCode,
         });
+        // setSelectedState(e.state);
+        // setSelectedCity(e.city); 
+        // setStateOrProvinceCode(e.stateOrProvinceCode);
+        // setZipCode(e.zipCode);
       } else {
         toast.error(response.data.message);
         navigate("/manage-address");
@@ -265,7 +293,54 @@ function Index() {
   const handleRadioChange = (event) => {
     setSelectedAddressId(event);
   };
+ // Filter data based on the selected state
+ const filterByState = (stateName) => {
+  return ExcelData.filter(item => item.state_name === stateName);
+};
+  const getCitiesAndZips = (ExcelData) => {
+    return ExcelData.map((item) => ({
+      city: item.city,
+      zip: item.zips ? String(item.zips).split(" ") : [],
+      stateOrProvinceCode:item.state_id,
+    }));
+  };
+  const sortedCities = (cities) => {
+    return cities
+      .filter((item) => item.city) 
+      .sort((a, b) => {
+        const cityA = a.city || "";
+        const cityB = b.city || "";
+        return cityA.localeCompare(cityB);
+      });
+  };
+  
 
+  const handleStateChange = (e) => {
+    setSelectedState(e.target.value);
+    setCityInput(""); 
+    setSelectedCity("");
+  };
+
+  const handleCityInputChange = (e) => {
+    setCityInput(e.target.value);
+  };
+
+  const handleCitySelect = (city,cityObj ) => {
+    setSelectedCity(city);
+    setCityInput(city);
+    setStateOrProvinceCode(cityObj.stateOrProvinceCode)    
+  };
+
+  const filteredData = filterByState(selectedState);
+  const citiesWithZips = getCitiesAndZips(filteredData);
+  const sortedCitiesList = sortedCities(citiesWithZips);
+  const displayedCities = sortedCitiesList
+    .filter(
+      (cityObj) =>
+        cityObj.city &&
+        cityObj.city.toLowerCase().includes(cityInput.toLowerCase())
+    )
+    .slice(0, 1000); 
   return (
     <Box minH={"80vh"} pos={"relative"}>
       <HStack
@@ -435,109 +510,83 @@ function Index() {
                     />
                     {errors.street && <span>{errors.street}</span>}
                   </FormControl>
-                  {/* <FormControl isRequired isInvalid={errors.StateOrProvinceCode}>
-                    <FormLabel>Province Code</FormLabel>
-                    <Input
-                      name='provinceCode'
-                      value={formData.StateOrProvinceCode}
-                      onChange={handleChange}
-                      w='100%'
-                      color='black'
-                      type='text'
-                      placeholder='State Province Code Select'
-                      focusBorderColor='none'
-                      bg='white'
-                      outline='none'
-                    />
-                    {errors.StateOrProvinceCode && <span>{errors.StateOrProvinceCode}</span>}
-                  </FormControl> */}
+                 
                   <Flex flexDir={{ base: "column", md: "row" }} gap={4}>
-                    <FormControl isRequired isInvalid={errors.city}>
-                      <FormLabel>City Name</FormLabel>
-                      <Input
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        w="100%"
-                        color="black"
-                        type="text"
-                        placeholder="City Name"
-                        focusBorderColor="none"
-                        bg="white"
-                        outline="none"
-                      />
-                      {errors.city && <span>{errors.city}</span>}
-                    </FormControl>
-
-                    {/* <FormControl isRequired isInvalid={errors.state}>
+                    <FormControl isRequired isInvalid={errors.state}>
                       <FormLabel>State Name</FormLabel>
-                      <Input
-                        name="state"
-                        value={formData.state}
-                        onChange={handleChange}
-                        w="100%"
-                        color="black"
-                        type="text"
-                        placeholder="State Name"
-                        focusBorderColor="none"
-                        bg="white"
-                        outline="none"
-                      />
-                      {errors.state && <span>{errors.state}</span>}
-                    </FormControl> */}
-
-                    {/* <FormControl isRequired isInvalid={errors.state}>
-                      <FormLabel>State Name </FormLabel>
                       <Select
-                        name="state"
-                        value={formData.state} // Using province abbreviation for value
-                        onChange={handleChange}
-                        w="100%"
-                        color="black"
                         placeholder="Select a state"
+                        onChange={handleStateChange}
+                        width="100%"
+                        color="black"
                         bg="white"
                         focusBorderColor="none"
-                        _focus={{ boxShadow: "none" }}
-                        maxHeight="600px"
-                        overflowY="auto"
                       >
-                        {statesData.map((state) => (
-                          <option
-                            key={state.abbreviation}
-                            value={state.name}
-                          >
-                            {state.name}
+                        {Array.from(
+                          new Set(ExcelData.map((item) => item.state_name))
+                        ).map((state) => (
+                          <option key={state} value={state}>
+                            {state}
                           </option>
                         ))}
                       </Select>
-                      {errors.state && <span>{errors.state}</span>}
-                    </FormControl> */}
-                   <FormControl isRequired isInvalid={errors.state}>
-                    <FormLabel>State Name</FormLabel>
-      <Select
-        name='state'
-        value={formData.province} // Using province abbreviation for value
-        onChange={handleChange}
-        w='100%'
-        color='black'
-        placeholder='Select a state'
-        bg='white'
-        focusBorderColor='none'
-        _focus={{ boxShadow: 'none' }}
-        maxHeight='600px'
-        overflowY='auto'
-      >
-        {statesData.map((state) => (
-          <option key={state.abbreviation} value={state.name}>
-            {state.name}
-          </option>
-        ))}
-      </Select>
-      </FormControl>
+                    </FormControl>
 
+                    <Box position="relative" width="100%">
+                      <FormControl isRequired isInvalid={errors.city}>
+                        <FormLabel>City Name</FormLabel>
+                        <Input
+                          id="city"
+                          value={cityInput}
+                          onChange={handleCityInputChange}
+                          placeholder="Type city name..."
+                          color="black"
+                          bg="white"
+                          focusBorderColor="none"
+                          outline="none"
+                        />
+                        {errors.city && <span>{errors.city}</span>}
+                      </FormControl>
+                      {displayedCities.length > 0 && (
+                        <Box
+                          position="absolute"
+                          top="100%"
+                          left={0}
+                          right={0}
+                          border="1px solid"
+                          borderColor="gray.200"
+                          borderRadius="md"
+                          bg="white"
+                          zIndex={10}
+                          maxHeight="400px" // Set a max height for scrolling
+                          overflowY="auto"
+                        >
+                           {displayedCities && displayedCities.length > 1 ?
+                          <List>
+                            {displayedCities.map((cityObj, index) => (
+                              <ListItem
+                                key={index}
+                                padding={2}
+                                cursor="pointer"
+                                _hover={{ bg: "gray.100" }}
+                                onClick={() =>
+                                 { handleCitySelect(cityObj?.city, cityObj)
+                                  }
+                                }
+                              >
+                                 <Text>
+                                  {cityObj.city}
+                                </Text> 
+                              </ListItem>
+                            ))}
+                          </List>
+                          : ''}
+                        </Box>
+                      )}
+                    </Box>
                   </Flex>
                   <Flex flexDir={{ base: "column", md: "row" }} gap={4}>
-                    <FormControl isRequired isInvalid={errors.state}>
+                    {/* <FormControl isRequired isInvalid={errors.state}>
                       <FormLabel>Country Name</FormLabel>
                       <Input
                         name="country"
@@ -552,29 +601,29 @@ function Index() {
                         outline="none"
                       />
                       {errors.country && <span>{errors.country}</span>}
-                    </FormControl>
+                    </FormControl> */}
                     <FormControl isRequired isInvalid={errors.zipCode}>
                       <FormLabel>Zip code</FormLabel>
-                      <Input
-                        name="zipCode"
-                        value={formData.zipCode}
-                        onChange={handleChange}
-                        w="100%"
+                      <Select
+                        placeholder="Select a zip code"
+                        width="100%"
                         color="black"
-                        type="tel"
-                        placeholder="zipCode Code"
-                        minLength={5}
-                        maxLength={5}
-                        focusBorderColor="none"
                         bg="white"
-                        outline="none"
-                      />
+                        focusBorderColor="none"
+                        marginTop={2}
+                        value={selectedZip} // Bind selected value
+                        onChange={(e) => setSelectedZip(e.target.value)} // Capture the selected value
+                        >
+                        {displayedCities[0]?.zip?.map((zip, index) => (
+                          <option key={index} value={zip}>                            
+                            {zip}
+                          </option>
+                        ))}
+                      </Select>
+
                       {errors.zipCode && <span>{errors.zipCode}</span>}
                     </FormControl>
                   </Flex>
-                  {/* <Checkbox my={4} defaultChecked>
-                                    Ship to different address
-                                </Checkbox> */}
                   <HStack my={8}>
                     <Button
                       w={40}

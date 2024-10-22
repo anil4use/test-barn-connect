@@ -89,7 +89,8 @@ const MainTable = () => {
     DL: 5,
   };
 
-  const initialStepIndex = statusToIndex[data?.trackResult?.derivedStatusCode] || 0;
+  const initialStepIndex =
+    statusToIndex[data?.trackResult?.derivedStatusCode] || 0;
   const { activeStep, setActiveStep } = useSteps({
     index: initialStepIndex,
     // count: steps.length,
@@ -102,7 +103,7 @@ const MainTable = () => {
 
   const [loading, setLoading] = useState(false);
   const max = steps.length - 1;
-//   const progressPercent = (activeStep / max) * 100;
+  //   const progressPercent = (activeStep / max) * 100;
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 

@@ -138,15 +138,17 @@ function Index() {
     e.preventDefault();
     try {
       setLoading(true);
-      const responce = await addressApi.addAddress(formData);
-      if (responce.data.code === 200) {
-        toast.success(responce.data.message);
+      const response = await addressApi.addAddress(formData);
+      if (response.data.code === 200) {
+        toast.success(response.data.message);
         setLoading(false);
         setAddressActive(false);
         getAllAddress();
         setFormData(initialState);
       } else {
-        toast.error(responce?.data?.message ? responce.data.message : 'not found');
+        toast.error(
+          response?.data?.message ? response.data.message : "not found"
+        );
         setLoading(false);
       }
     } catch (error) {
@@ -154,19 +156,19 @@ function Index() {
       setLoading(false);
     }
   };
-  
+
   // const ApplyCouponHandler = async (e) => {
   //   e.preventDefault();
   //   try {
   //     setCouponLoading(true);
-  //     const responce = await checkOutApi.applyCoupon({
+  //     const response = await checkOutApi.applyCoupon({
   //       couponCode,
   //     });
-  //     if (responce.data.code === 200) {
-  //       toast.success(responce.data.message);
+  //     if (response.data.code === 200) {
+  //       toast.success(response.data.message);
   //       getOrderSummary();
   //     } else {
-  //       toast.error(responce.data.message);
+  //       toast.error(response.data.message);
   //     }
   //   } catch (error) {
   //     toast.error(error);
@@ -179,9 +181,9 @@ function Index() {
   const resetCartHandler = async () => {
     try {
       const resetCartResponse = await cartApi.resetCart();
-      if (resetCartResponse.data.code === 200) {
+      if (resetCartResponse?.data?.code === 200) {
       } else {
-        toast.error(resetCartResponse.data.message);
+        toast.error(resetCartResponse?.data?.message);
       }
     } catch (error) {
       toast.error(error);
@@ -190,29 +192,49 @@ function Index() {
 
   const getOrderSummary = async () => {
     setOrderSummaryLoading(true);
-    try {
-      const getResponce = await checkOutApi.getOrderSummary({
-        couponCode,
-        addressId: selectedAddressId,
-      });
-      if (getResponce.data.code === 200) {
-        setOrderSummary(getResponce.data.data);
-        console.log(getResponce.data.data <= 0);
-      } else {
-        toast.error(getResponce.data.message);
+    console.log("getOrderSummary calling outer");
+
+    if (selectedAddressId !== null || selectedAddressId === undefined || selectedAddressId === '') {
+      console.log("getOrderSummary calling inner");
+      try {
+        const Response = await checkOutApi.getOrderSummary({
+          couponCode,
+          addressId: selectedAddressId,
+        });
+        if (Response?.data?.code === 200) {
+          setOrderSummary(Response?.data?.data);
+        } else {
+          toast.error(Response?.data?.message);
+        }
+      } catch (error) {
+        toast.error(error);
+      } finally {
+        setOrderSummaryLoading(false);
       }
-    } catch (error) {
-      toast.error(error);
-    } finally {
-      setOrderSummaryLoading(false);
     }
+    // try {
+    //   const Response = await checkOutApi.getOrderSummary({
+    //     couponCode,
+    //     addressId: selectedAddressId,
+    //   });
+    //   if (Response?.data?.code === 200) {
+    //     setOrderSummary(Response?.data?.data);
+    //     console.log(Response?.data?.data <= 0);
+    //   } else {
+    //     toast.error(Response?.data?.message);
+    //   }
+    // } catch (error) {
+    //   toast.error(error);
+    // } finally {
+    //   setOrderSummaryLoading(false);
+    // }
   };
 
   const UpdateHandler = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const responce = await addressApi.updateAddress({
+      const response = await addressApi.updateAddress({
         city: formData.city,
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -224,14 +246,14 @@ function Index() {
         contact: formData.contact,
         addressId: id,
       });
-      if (responce.data.code === 200) {
-        toast.success(responce.data.message);
+      if (response.data.code === 200) {
+        toast.success(response.data.message);
         setLoading(false);
         getAllAddress();
         setAddressActive(!addressActive);
         setFormData(initialState);
       } else {
-        toast.error(responce.data.message);
+        toast.error(response.data.message);
         setLoading(false);
       }
     } catch (error) {
@@ -242,14 +264,13 @@ function Index() {
 
   const getAllAddress = async () => {
     setLoadingAddress(true);
-
     try {
-      const responce = await addressApi.getAllAddress();
-      if (responce.data.code === 200) {
-        setAllAddress(responce.data.data);
-        setSelectedAddressId(responce.data.data[0]?.addressId);
+      const response = await addressApi.getAllAddress();
+      if (response.data.code === 200) {
+        setAllAddress(response.data.data);
+        setSelectedAddressId(response?.data?.data[0]?.addressId);
       } else {
-        toast.error(responce.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       toast.error(error);
@@ -261,15 +282,15 @@ function Index() {
   const deleteAddressHandler = async (addressId) => {
     setLoadingDelete(true);
     try {
-      const responce = await addressApi.deleteAddress({
+      const response = await addressApi.deleteAddress({
         addressId,
       });
-      if (responce.data.code === 200) {
-        toast.success(responce.data.message);
+      if (response.data.code === 200) {
+        toast.success(response.data.message);
         getAllAddress();
         setLoadingDelete(false);
       } else {
-        toast.error(responce.data.message);
+        toast.error(response.data.message);
         setLoadingDelete(false);
       }
     } catch (error) {
@@ -283,11 +304,11 @@ function Index() {
 
   const getAddressHandler = async (addressId) => {
     try {
-      const responce = await addressApi.getAddress({
+      const response = await addressApi.getAddress({
         addressId,
       });
-      if (responce.data.code === 200) {
-        const e = responce.data.data;
+      if (response.data.code === 200) {
+        const e = response.data.data;
         setFormData({
           city: e.city,
           firstName: e.firstName,
@@ -300,29 +321,29 @@ function Index() {
           contact: e.contact,
         });
       } else {
-        toast.error(responce.data.message);
-        navigate("/check-out");
+        toast.error(response?.data?.message);
+        // navigate("/check-out");
       }
     } catch (error) {
       toast.error(error);
     }
   };
-  
+
   const PaymentHandler = async () => {
     if (selectedAddressId === undefined || selectedAddressId === null) {
       return toast.error("Please select or Add New  Address");
     }
     setPaymentLoading(true);
     try {
-      const PaymentResponce = await checkOutApi.createOrder({
+      const Paymentresponse = await checkOutApi.createOrder({
         addressId: selectedAddressId,
       });
-      if (PaymentResponce.data.code === 200) {
-        // toast.success(PaymentResponce.data.message);
+      if (Paymentresponse.data.code === 200) {
+        // toast.success(Paymentresponse.data.message);
         resetCartHandler();
-        window.open(PaymentResponce.data.data.data.url);
+        window.open(Paymentresponse.data.data.data.url);
       } else {
-        toast.error(PaymentResponce.data.message);
+        toast.error(Paymentresponse.data.message);
       }
     } catch (error) {
       toast.error(error);
@@ -334,13 +355,14 @@ function Index() {
   useEffect(() => {
     getAllAddress();
     getOrderSummary();
-  }, []);
+    console.log("getOrderSummary calling");
+  }, [selectedAddressId]);
   useEffect(() => {
     if (id) {
       getAddressHandler(id);
       setAddressActive(true);
     } else {
-      navigate("/check-out");
+      // navigate("/check-out");
       setAddressActive(false);
       setFormData(initialState);
     }
@@ -439,72 +461,73 @@ function Index() {
                 flexDirection={"column"}
                 gap={3}
               >
-                {allAddress.map((item, index) => {
-                  return (
-                    <Box
-                      key={index}
-                      p={2}
-                      borderTop={index >= 1 ? "1px solid #cccccc" : ""}
-                      w={"100%"}
-                    >
-                      <HStack w={"100%"} justifyContent={"space-between"}>
-                        <Box>
-                          <Text fontSize={"16px"} fontWeight={"bold"}>
-                            {item.firstName} {item.lastName}
-                          </Text>
-                          <Text
-                            fontSize={"14px"}
-                            noOfLines={2}
-                            textColor={"#222222"}
-                            fontFamily={"Sofia Sans"}
-                          >
-                            {item.street},{item.city},{item.state},
-                            {item.zipCode}
-                          </Text>
-                          <HStack>
-                            <RadioGroup
-                              value={selectedAddressId}
-                              onChange={handleRadioChange}
+                {allAddress &&
+                  allAddress?.map((item, index) => {
+                    return (
+                      <Box
+                        key={index}
+                        p={2}
+                        borderTop={index >= 1 ? "1px solid #cccccc" : ""}
+                        w={"100%"}
+                      >
+                        <HStack w={"100%"} justifyContent={"space-between"}>
+                          <Box>
+                            <Text fontSize={"16px"} fontWeight={"bold"}>
+                              {item.firstName} {item.lastName}
+                            </Text>
+                            <Text
+                              fontSize={"14px"}
+                              noOfLines={2}
+                              textColor={"#222222"}
+                              fontFamily={"Sofia Sans"}
                             >
-                              <Radio
-                                size="md"
-                                colorScheme="green"
-                                value={item.addressId}
-                                // isChecked={selectedAddressId === item.addressId}
+                              {item.street},{item.city},{item.state},
+                              {item.zipCode}
+                            </Text>
+                            <HStack>
+                              <RadioGroup
+                                value={selectedAddressId}
+                                onChange={handleRadioChange}
                               >
-                                Use as the shipping address
-                              </Radio>
-                            </RadioGroup>
-                          </HStack>
-                        </Box>
+                                <Radio
+                                  size="md"
+                                  colorScheme="green"
+                                  value={item.addressId}
+                                  // isChecked={selectedAddressId === item.addressId}
+                                >
+                                  Use as the shipping address
+                                </Radio>
+                              </RadioGroup>
+                            </HStack>
+                          </Box>
 
-                        <VStack>
-                          <Button
-                            onClick={() => {
-                              setAddressActive(!addressActive);
-                              navigate(`/check-out/?id=${item.addressId}`);
-                            }}
-                            colorScheme="teal"
-                            variant={"outline"}
-                            gap={1}
-                            w={20}
-                            justify={"space-between"}
-                            cursor={"pointer"}
-                            fontWeight={"bold"}
-                            textColor={"#00a3e2"}
-                          >
-                            Edit
-                            <EditIcon />
-                          </Button>
-                          <DeleteAddressComponent
-                            getAllAddress={getAllAddress}
-                            item={item}
-                          />
-                        </VStack>
-                      </HStack>
-                    </Box>
-                  );
-                })}
+                          <VStack>
+                            <Button
+                              onClick={() => {
+                                setAddressActive(!addressActive);
+                                navigate(`/check-out/?id=${item.addressId}`);
+                              }}
+                              colorScheme="teal"
+                              variant={"outline"}
+                              gap={1}
+                              w={20}
+                              justify={"space-between"}
+                              cursor={"pointer"}
+                              fontWeight={"bold"}
+                              textColor={"#00a3e2"}
+                            >
+                              Edit
+                              <EditIcon />
+                            </Button>
+                            <DeleteAddressComponent
+                              getAllAddress={getAllAddress}
+                              item={item}
+                            />
+                          </VStack>
+                        </HStack>
+                      </Box>
+                    );
+                  })}
               </Box>
             )}
 
@@ -821,6 +844,7 @@ function Index() {
                       colorScheme="#E537"
                       bg={"#2b8f65"}
                       isLoading={couponLoading}
+                      isDisabled
                     >
                       Apply
                     </Button>
@@ -874,7 +898,7 @@ function Index() {
                   <Text> $ {orderSummary?.shipping}</Text>
                 )}
               </HStack>
-              <HStack
+              {/* <HStack
                 justifyContent={"space-between"}
                 fontSize={"16px"}
                 fontWeight={"600"}
@@ -888,8 +912,8 @@ function Index() {
                     {"$"} {orderSummary?.beforeTex}
                   </Text>
                 )}
-              </HStack>
-              <HStack
+              </HStack> */}
+              {/* <HStack
                 justifyContent={"space-between"}
                 fontSize={"16px"}
                 fontWeight={"600"}
@@ -902,7 +926,7 @@ function Index() {
                   <Text> $ {orderSummary?.taxCollected}</Text>
                 )}
               </HStack>
-              <Divider border={"1px solid #cccccc"} />
+              <Divider border={"1px solid #cccccc"} /> */}
               <HStack
                 mt={4}
                 justifyContent={"space-between"}
@@ -986,14 +1010,14 @@ const DeleteAddressComponent = ({ item, getAllAddress }) => {
   const deleteAddressHandler = async (addressId) => {
     setLoadingDelete(true);
     try {
-      const responce = await addressApi.deleteAddress({
+      const response = await addressApi.deleteAddress({
         addressId,
       });
-      if (responce.data.code === 200) {
-        toast.success(responce.data.message);
+      if (response.data.code === 200) {
+        toast.success(response.data.message);
         getAllAddress();
       } else {
-        toast.error(responce.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       toast.error(error);

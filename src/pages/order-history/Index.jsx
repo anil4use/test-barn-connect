@@ -111,7 +111,6 @@ function Index() {
             borderRadius={"10px"}
             className="hide-scrollbar"
             // border={"1px solid #cccccc"}
-
           >
             {loading ? (
               <>
@@ -155,7 +154,6 @@ function Index() {
 }
 
 export default Index;
-
 
 const MainTable = ({ data, loading }) => {
   const statusColorMap = {
@@ -232,8 +230,10 @@ const MainTable = ({ data, loading }) => {
               onClick={() => {
                 item?.orderStatus === "unpaid"
                   ? toast.error("Transaction failed")
-                  // : navigate(`/order-tracking?orderId=${item?.orderId}`);
-                  : navigate(`/order-tracking?productId=${item?.productId}&trackingId=${item?.trackingNumber}`);
+                  : // : navigate(`/order-tracking?orderId=${item?.orderId}`);
+                    navigate(
+                      `/order-tracking?productId=${item?.productId}&trackingId=${item?.trackingNumber}`
+                    );
               }}
               key={index}
               h={{ base: "14", md: "24" }}
@@ -250,27 +250,27 @@ const MainTable = ({ data, loading }) => {
                 placeContent={"center"}
               >
                 {/* {item?.orderItems?.map((item, index) => ( */}
-                  <HStack key={index} minH={10} mt={1}>
-                    <Image
-                      w={{ base: "40px", md: "80px" }}
-                      h={"10"}
-                      fallbackSrc="https://placehold.co/900x400"
-                      src={item?.coverImage}
-                      alt="img"
-                    />
-                    {console.log("testing", item)}
-                    <Box>
-                      <Text
-                        fontSize={{ base: "12px", md: "12px" }}
-                        noOfLines={"1"}
-                        fontWeight={700}
-                      >
-                        {item?.name?.slice(0, 28)} ..
-                      </Text>
-                      {/* <Text fontSize={{ base: "12px", md: "12px" }} fontWeight={700}>it is a long established fact that .....</Text> */}
-                      {/* <Text fontSize={{ base: "12px", md: "14px" }} fontWeight={700}>Size: {item.productSize}</Text> */}
-                    </Box>
-                  </HStack>
+                <HStack key={index} minH={10} mt={1}>
+                  <Image
+                    w={{ base: "40px", md: "80px" }}
+                    h={"10"}
+                    fallbackSrc="https://placehold.co/900x400"
+                    src={item?.coverImage}
+                    alt="img"
+                  />
+                  {console.log("testing", item)}
+                  <Box>
+                    <Text
+                      fontSize={{ base: "12px", md: "12px" }}
+                      noOfLines={"1"}
+                      fontWeight={700}
+                    >
+                      {item?.name?.slice(0, 28)} ..
+                    </Text>
+                    {/* <Text fontSize={{ base: "12px", md: "12px" }} fontWeight={700}>it is a long established fact that .....</Text> */}
+                    {/* <Text fontSize={{ base: "12px", md: "14px" }} fontWeight={700}>Size: {item.productSize}</Text> */}
+                  </Box>
+                </HStack>
                 {/* ))} */}
               </Td>
 
@@ -278,11 +278,7 @@ const MainTable = ({ data, loading }) => {
                 {item?.quantity ? item.quantity : "-"}
               </Td>
               {/* <Td w={'20'}>${!item?.originalPrice ? item?.originalPrice * item?.quantity : item?.originalPrice}</Td> */}
-              <Td w={"20"}>
-                $
-                {item?.totalPrice
-                  ? item?.totalPrice :'-'}
-              </Td>
+              <Td w={"20"}>${item?.totalPrice ? item?.totalPrice : "-"}</Td>
               <Td w={"28"}>
                 <Text
                   textColor={statusColorMap[item?.orderStatus]}
@@ -321,8 +317,8 @@ const MainTable = ({ data, loading }) => {
                 >
                   {item?.orderStatus === "paid"
                     ? item?.deliveryStatus?.charAt(0)?.toUpperCase()
-                      // item?.deliveryStatus?.slice(1)?.toLowerCase()
-                    : ""}
+                    : // item?.deliveryStatus?.slice(1)?.toLowerCase()
+                      ""}
                 </Text>
               </Td>
             </Tr>

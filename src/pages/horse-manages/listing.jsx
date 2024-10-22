@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import {
-  Box,
-  Text,
-  HStack,
-  Grid,
-  Image,
-  Button,
-} from "@chakra-ui/react";
+import { Box, Text, HStack, Grid, Image, Button } from "@chakra-ui/react";
 
 import BannerImg from "../../assets/images/Serviesbanner.png";
 import ProductBanner from "../../components/shared/banner/Index";
 import HorseCard from "../../components/shared/horse-card/Card";
 import nodataFoundImg from "../../assets/images/nodataFoundImg.png";
-import HorseApi from '../../apis/horse.api.js'
+import HorseApi from "../../apis/horse.api.js";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -41,7 +34,7 @@ function Index() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -74,7 +67,6 @@ function Index() {
             fontWeight={"700"}
             fontSize={{ base: "16px", md: "40px" }}
             textColor={"#2b8f65"}
-
             textAlign={"center"}
           >
             Our Horses
@@ -88,7 +80,15 @@ function Index() {
           >
             Elevating Your Experience, Every Day.
           </Text>
-          <Button mt={1} float={'inline-end'} variant='outline' colorScheme='green' onClick={() => (navigate('/horse/register'))} >Add Horse</Button>
+          <Button
+            mt={1}
+            float={"inline-end"}
+            variant="outline"
+            colorScheme="green"
+            onClick={() => navigate("/horse/register")}
+          >
+            Add Horse
+          </Button>
         </Box>
       </HStack>
       <HStack
@@ -114,7 +114,11 @@ function Index() {
             pb={10}
           >
             {data && data.length > 0 ? (
-              <HorseCard getAllHorse={getAllHorses} loading={loading} data={data} />
+              <HorseCard
+                getAllHorse={getAllHorses}
+                loading={loading}
+                data={data}
+              />
             ) : (
               <Box
                 top="70%"
@@ -188,4 +192,3 @@ function Index() {
 }
 
 export default Index;
-

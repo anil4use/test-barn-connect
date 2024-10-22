@@ -39,7 +39,7 @@ function Index() {
   console.log(barnId, isBarn);
 
   const { id } = useParams();
-  const Navigate = useNavigate()
+  const Navigate = useNavigate();
 
   const [horseAgeError, setHorseAgeError] = useState(""); //
   const [horseBreedError, setHorseBreedError] = useState(""); //
@@ -54,7 +54,7 @@ function Index() {
     setHorseDocs(docs);
   };
 
-  console.log(horseImages)
+  console.log(horseImages);
 
   //   for (const key in formData) {
   //     if (formData.hasOwnProperty(key)) {
@@ -86,9 +86,9 @@ function Index() {
       if (RegisterResponse.data.code === 200) {
         toast.success(RegisterResponse.data.message);
         if (isBarn) {
-          Navigate(`/check-out?isBarn=${true}&barnId=${barnId}`)
+          Navigate(`/check-out?isBarn=${true}&barnId=${barnId}`);
         } else {
-          Navigate('/horses')
+          Navigate("/horses");
         }
       } else {
         toast.error(RegisterResponse.data.message);
@@ -101,7 +101,7 @@ function Index() {
   };
 
   const handleUpdate = async (e) => {
-    setLoading(true)
+    setLoading(true);
     e.preventDefault();
     //   setLoading(true);
     const formData = new FormData();
@@ -112,36 +112,34 @@ function Index() {
     // formData.append("boardingFacilityName", BoardFacName);
     // formData.append("boardingFacilityAddress", BoardFacAddress);
 
-
     if (horseImages.length > 0) {
       horseImages.forEach((file, index) => {
         formData.append("images", file);
       });
     } else {
-      formData.append("images", '');
+      formData.append("images", "");
     }
     if (horseDocs.length > 0) {
       // Append documents
       horseDocs.forEach((file) => {
         formData.append("docs", file);
-      })
+      });
     } else {
-      formData.append("docs", '');
-
+      formData.append("docs", "");
     }
 
     try {
       const RegisterResponse = await authApi.updatehorseProfile(formData);
       if (RegisterResponse.data.code === 200) {
         toast.success(RegisterResponse.data.message);
-        Navigate('/horses')
+        Navigate("/horses");
       } else {
         toast.error(RegisterResponse.data.message);
       }
     } catch (error) {
       toast.error("something went wrong");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -151,7 +149,7 @@ function Index() {
       const RegisterResponse = await horseApi.getHorseById({ horseId: id });
       if (RegisterResponse.data.code === 200) {
         let e = RegisterResponse?.data?.data;
-        console.log('e,', e);
+        console.log("e,", e);
         setHorseAge(e?.horseAge);
         setHorseBreed(e?.horseBreed);
         setHorseName(e?.horseName);

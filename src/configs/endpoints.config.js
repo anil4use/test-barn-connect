@@ -60,7 +60,6 @@ const ApiRoutes = {
       Endpoint: "/reSendOtp",
       Method: HttpMethod.Post,
     },
-   
   },
   Product: {
     getAllProduct: {
@@ -87,7 +86,6 @@ const ApiRoutes = {
       Endpoint: "/getCategoryAndSubCategory",
       Method: HttpMethod.Post,
     },
-
   },
   Wishlist: {
     addWishlist: {
@@ -102,7 +100,6 @@ const ApiRoutes = {
       Endpoint: "/getWishlist",
       Method: HttpMethod.Post,
     },
-
   },
   Cart: {
     addToCart: {
@@ -121,7 +118,6 @@ const ApiRoutes = {
       Endpoint: "/resetCart",
       Method: HttpMethod.Post,
     },
-
   },
   CheckOut: {
     applyCoupon: {
@@ -168,11 +164,8 @@ const ApiRoutes = {
       Endpoint: "/deleteRentalProduct",
       Method: HttpMethod.Post,
     },
-
-
   },
   Address: {
- 
     getallAddress: {
       Endpoint: "/getAllAddressOfLoginUser",
       Method: HttpMethod.Post,
@@ -193,7 +186,6 @@ const ApiRoutes = {
       Endpoint: "/getAddressByAddressId",
       Method: HttpMethod.Post,
     },
-
   },
   Services: {
     getAllService: {
@@ -239,7 +231,6 @@ const ApiRoutes = {
       Endpoint: "/contactUs",
       Method: HttpMethod.Post,
     },
-
   },
   Jobs: {
     getJobDetails: {
@@ -254,7 +245,6 @@ const ApiRoutes = {
       Endpoint: "/getJobById",
       Method: HttpMethod.Post,
     },
-
   },
   Barns: {
     getAllBarn: {
@@ -273,7 +263,6 @@ const ApiRoutes = {
       Endpoint: "/getReviewByBarnId",
       Method: HttpMethod.Post,
     },
-
   },
   Horses: {
     getAllHorseOfUser: {
@@ -302,7 +291,7 @@ const ApiRoutes = {
       Endpoint: "/getAllCoupon",
       Method: HttpMethod.Post,
     },
-  }
+  },
 };
 
 export default ApiRoutes;
